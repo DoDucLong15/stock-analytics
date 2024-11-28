@@ -80,6 +80,7 @@ def jobCrawlVn30Data(kafka_topic, bootstrap_servers):
   while True:
     for symbol in symbol_array:
       json_data = get_stock_data(symbol)
+      print(json_data)
       produce_kafka_json(bootstrap_servers, kafka_topic, symbol, json_data)
       time.sleep(2)
     break
@@ -87,6 +88,7 @@ def jobCrawlVn30Data(kafka_topic, bootstrap_servers):
 def jobCrawlStockDataRealtime(symbol, kafka_topic, bootstrap_servers):
   while True:
     stock_data = get_stock_data_intraday(symbol)
+    print(stock_data)
     produce_kafka_json(bootstrap_servers, kafka_topic, symbol, stock_data)
     time.sleep(60)
 

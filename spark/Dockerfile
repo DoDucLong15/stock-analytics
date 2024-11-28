@@ -3,8 +3,8 @@ FROM bde2020/spark-submit:3.3.0-hadoop3.3
 LABEL maintainer="Your Name <your.email@example.com>"
 # Create /app directory in the container
 RUN mkdir /app
-RUN rm /submit.sh
-COPY ./submit.sh /
+# RUN rm /submit.sh
+COPY ./run.sh /
 
 RUN echo "Build number: 1"
 # Copy ./app/template.sh from local to /

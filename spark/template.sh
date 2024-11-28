@@ -1,1 +1,1 @@
-sh /submit.sh
+sh /run.sh
