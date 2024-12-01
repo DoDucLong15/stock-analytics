@@ -43,11 +43,6 @@ def get_stock_data(symbol):
   df['time'] = df['time'].apply(lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if not pd.isnull(x) else None)
   df = df.assign(companyType=info_df['companyType'].iloc[0])
 
-  # Save to CSV
-  # os.makedirs('data', exist_ok=True)
-  # csv_filename = f"data/{symbol}_historical.csv"
-  # df.to_csv(csv_filename, index=False)
-
   json_data = df.to_json(date_format='iso', orient='records')
   return json_data
 
@@ -57,24 +52,15 @@ def get_stock_data_intraday(symbol):
       page_size=100,
       investor_segment=True
   )
-  # Specify the format directly if you know it, for example:
   df['time'] = pd.to_datetime(df['time'])
   df['time'] = df['time'].apply(lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if not pd.isnull(x) else None)
-  # Save to CSV
-  # os.makedirs('data', exist_ok=True)
-  # csv_filename = f"data/{symbol}_intraday.csv"
-  # df.to_csv(csv_filename, index=False)
 
 
   json_data = df.to_json(date_format='iso', orient='records')
   return json_data
 
 def jobCrawlVn30Data(kafka_topic, bootstrap_servers):
-  # List stock
-  # stock = Vnstock().stock(symbol='MSN', source='TCBS')
-  # obj = stock.listing.symbols_by_group('VN30')
-  # string_array = list(obj)
-  # symbol_array = [item for item in string_array if item.isalpha()]
+
 
   symbol_array = ["ACB","BCM","BID","BVH","CTG",
                   "FPT","GAS","GVR","HDB","HPG","MBB","MSN",
@@ -97,8 +83,8 @@ def jobCrawlStockDataRealtime(symbol, kafka_topic, bootstrap_servers):
     time.sleep(90)
 
 if __name__ == "__main__":
-  bootstrap_servers = 'localhost:9093,localhost:9095,localhost:9097'
-  kafka_topic_vn30 = 'vn30'  # Thay thế bằng tên Kafka topic của bạn
+  bootstrap_servers = 'kafka:9092,kafka:9094,kafka:9096'
+  kafka_topic_vn30 = 'vn30'  #
   kafka_topic_realtime = 'stock_realtime4'
 
   t1 = threading.Thread(target=jobCrawlVn30Data, args=(kafka_topic_vn30, bootstrap_servers))
