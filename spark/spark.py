@@ -99,7 +99,13 @@ def jobStockRealtimeData(spark):
 
   data_df = data_df.select(explode(col("jsonData")).alias("stock_data")).select("stock_data.*")
 
-  print(data_df)
+  print("Realtime")
+  query = data_df.writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .option("truncate", "false") \
+    .start()
+  query.awaitTermination()
     # data_df = data_df.withColumn("jsonData.time", to_timestamp(element_at("jsonData.time", 1), "HH:mm:ss"))  # Điều chỉnh định dạng của chuỗi 'time' tương ứng
 
     # unique_data_df = data_df.select("jsonData.*").dropDuplicates(['total_minutes'])
