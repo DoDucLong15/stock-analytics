@@ -18,18 +18,23 @@ def jobVN30Data(spark):
   ]))
 
     # Định nghĩa tham số Kafka
-  kafka_params = {
-    "kafka.bootstrap.servers": "kafka:9092",
-    "subscribe": "vn30",
-    "startingOffsets": "latest",
-    "failOnDataLoss": "false"
-  }
+  # kafka_params = {
+  #   "kafka.bootstrap.servers": "kafka:9092",
+  #   "subscribe": "vn30",
+  #   "startingOffsets": "latest",
+  #   "failOnDataLoss": "false"
+  # }
 
     # Đọc dữ liệu từ Kafka
-  kafka_df = spark.readStream.format("kafka").options(**kafka_params).load()
+  kafka_df = spark.readStream.format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "vn30") \
+    .option("startingOffsets", "latest") \
+    .option("failOnDataLoss", "false") \
+    .load()
 
   print("Data vn30")
-  print(kafka_df)
+  kafka_df.printSchema()
 
     # Chuyển đổi cột 'value' từ dạng binary sang chuỗi JSON
   kafka_df = kafka_df.selectExpr("CAST(value AS STRING)")
@@ -38,7 +43,15 @@ def jobVN30Data(spark):
 
     # Sử dụng hàm explode để biến đổi mảng thành các hàng
   stock_df = stock_df.select(explode(col("data")).alias("stock_data")).select("stock_data.*")
-  print(stock_df)
+  # Hiển thị schema của DataFrame kết quả
+  stock_df.printSchema()
+
+  query = stock_df.writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .option("truncate", "false") \
+    .start()
+  query.awaitTermination()
     # Định nghĩa đường dẫn xuất HDFS
   # output_path = "hdfs://namenode:8020/user/root/kafka_data"
 
