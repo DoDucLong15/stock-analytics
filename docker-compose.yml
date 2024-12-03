@@ -11,25 +11,25 @@ services:
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
       - CASSANDRA_SEEDS=cassandra1
 
-#  cassandra2:
-#    image: cassandra:4.0
-#    container_name: cassandra2
-#    networks:
-#      - vnstock-net
-#    environment:
-#      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
-#      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-#      - CASSANDRA_SEEDS=cassandra1
-#
-#  cassandra3:
-#    image: cassandra:4.0
-#    container_name: cassandra3
-#    networks:
-#      - vnstock-net
-#    environment:
-#      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
-#      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-#      - CASSANDRA_SEEDS=cassandra1
+  cassandra2:
+    image: cassandra:4.0
+    container_name: cassandra2
+    networks:
+      - vnstock-net
+    environment:
+      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra1
+
+  cassandra3:
+    image: cassandra:4.0
+    container_name: cassandra3
+    networks:
+      - vnstock-net
+    environment:
+      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra1
   spark-submit-app:
     build:
       context: spark
