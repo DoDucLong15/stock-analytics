@@ -54,7 +54,7 @@ def get_stock_data(symbol):
 def get_stock_data_intraday(symbol):
   df = stock_intraday_data(
       symbol=symbol,
-      page_size=1,
+      page_size=100,
       investor_segment=True
   )
   # Specify the format directly if you know it, for example:
@@ -90,7 +90,7 @@ def jobCrawlStockDataRealtime(symbol, kafka_topic, bootstrap_servers):
     stock_data = get_stock_data_intraday(symbol)
     print(stock_data)
     produce_kafka_json(bootstrap_servers, kafka_topic, symbol, stock_data)
-    time.sleep(60)
+    time.sleep(30)
 
 if __name__ == "__main__":
   bootstrap_servers = 'kafka:9092'  # Thay thế bằng địa chỉ Kafka broker của bạn
@@ -98,7 +98,7 @@ if __name__ == "__main__":
   kafka_topic_realtime = 'stock_realtime4'
 
   t1 = threading.Thread(target=jobCrawlVn30Data, args=(kafka_topic_vn30, bootstrap_servers))
-  t2 = threading.Thread(target=jobCrawlStockDataRealtime, args=('FPT', kafka_topic_realtime, bootstrap_servers))
+  t2 = threading.Thread(target=jobCrawlStockDataRealtime, args=('MSN', kafka_topic_realtime, bootstrap_servers))
 
   t1.start()
   t2.start()
