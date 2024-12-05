@@ -78,7 +78,7 @@ def jobStockRealtimeData(spark):
     StructField("averagePrice", DoubleType(), True),
     StructField("orderCount", IntegerType(), True),
     StructField("prevPriceChange", DoubleType(), True),
-    StructField("total_minutes", StringType(), True)
+    # StructField("total_minutes", StringType(), True)
   ]))
 
     # Định nghĩa tham số Kafka
@@ -100,33 +100,29 @@ def jobStockRealtimeData(spark):
   data_df = data_df.select(explode(col("jsonData")).alias("stock_data")).select("stock_data.*")
 
   print("Realtime")
-  query = data_df.writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .option("truncate", "false") \
-    .start()
-  query.awaitTermination()
+  # query = data_df.writeStream \
+  #   .outputMode("append") \
+  #   .format("console") \
+  #   .option("truncate", "false") \
+  #   .start()
+  
     # data_df = data_df.withColumn("jsonData.time", to_timestamp(element_at("jsonData.time", 1), "HH:mm:ss"))  # Điều chỉnh định dạng của chuỗi 'time' tương ứng
 
     # unique_data_df = data_df.select("jsonData.*").dropDuplicates(['total_minutes'])
-  # query = data_df.writeStream.outputMode("append").format("console").start()
-
+  query = data_df.writeStream.outputMode("append").format("console").start()
     
-  # try:
-  #   data_df.writeStream .format("org.elasticsearch.spark.sql") \
-  #     .option("es.nodes", "https://big-data.es.asia-southeast1.gcp.elastic-cloud.com") \
-  #     .option("es.port", "9243") \
-  #     .option("es.resource", "data_realtime_28_12") \
-  #     .option("es.net.http.auth.user", "elastic") \
-  #     .option("es.net.http.auth.pass", "Fqlvu8CGw9jIGdxSsSSR4R1z") \
-  #     .option("es.nodes.wan.only", "true") \
-  #     .option("checkpointLocation", "../checkpoint") \
-  #     .outputMode("append") \
-  #     .start()
-  #   logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")
-  # except Exception as e:
-  #   logging.error("Đã xảy ra lỗi khi gửi dữ liệu lên Elasticsearch: %s", str(e))
-  # query.awaitTermination() 
+  try:
+    data_df.writeStream .format("org.elasticsearch.spark.sql") \
+      .option("es.nodes", "elasticsearch") \
+      .option("es.port", "9200") \
+      .option("es.resource", "data_realtime_12_02") \
+      .option("es.nodes.wan.only", "false") \
+      .outputMode("append") \
+      .start()
+    logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")
+  except Exception as e:
+    logging.error("Đã xảy ra lỗi khi gửi dữ liệu lên Elasticsearch: %s", str(e))
+  query.awaitTermination()
 
 if __name__ == "__main__":
   # Khởi tạo SparkSession
