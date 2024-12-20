@@ -115,8 +115,9 @@ def jobStockRealtimeData(spark):
     data_df.writeStream .format("org.elasticsearch.spark.sql") \
       .option("es.nodes", "elasticsearch") \
       .option("es.port", "9200") \
-      .option("es.resource", "data_realtime_12_02") \
+      .option("es.resource", "data_realtime_12_05") \
       .option("es.nodes.wan.only", "false") \
+      .option("checkpointLocation", "../checkpoint") \
       .outputMode("append") \
       .start()
     logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")

@@ -1,5 +1,5 @@
 # Sử dụng image Python cơ bản
-FROM python:latest
+FROM python:3.10
 
 # Cài đặt các package cần thiết
 RUN pip3 install requests
