@@ -11,7 +11,7 @@ RUN echo "Build number: 1"
 COPY ./template.sh /
 
 # Copy all files from ./app in local to /app in container
-COPY ./spark.py ./requirements.txt /app/
+COPY ./spark.py ./hadoop_to_elastics.py ./requirements.txt /app/
 
 # Set the working directory to /app
 WORKDIR /app
