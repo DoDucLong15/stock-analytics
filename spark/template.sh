@@ -1,1 +1,1 @@
-sh /run.sh
+sh /go.sh

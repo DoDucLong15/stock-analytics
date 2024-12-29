@@ -17,14 +17,6 @@ def jobVN30Data(spark):
     StructField("companyType", StringType(), True)
   ]))
 
-    # Định nghĩa tham số Kafka
-  # kafka_params = {
-  #   "kafka.bootstrap.servers": "kafka:9092",
-  #   "subscribe": "vn30",
-  #   "startingOffsets": "latest",
-  #   "failOnDataLoss": "false"
-  # }
-
     # Đọc dữ liệu từ Kafka
   kafka_df = spark.readStream.format("kafka") \
     .option("kafka.bootstrap.servers", "kafka:9092") \
@@ -46,27 +38,29 @@ def jobVN30Data(spark):
   # Hiển thị schema của DataFrame kết quả
   stock_df.printSchema()
 
-  query = stock_df.writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .option("truncate", "false") \
-    .start()
-  query.awaitTermination()
+  # query = stock_df.writeStream \
+  #   .outputMode("append") \
+  #   .format("console") \
+  #   .option("truncate", "false") \
+  #   .start()
+  # query.awaitTermination()
+  print('Start write to HDFS')
     # Định nghĩa đường dẫn xuất HDFS
-  # output_path = "hdfs://namenode:8020/user/root/kafka_data"
+  output_path = "hdfs://namenode:8020/user/root/kafka_data"
 
   #   # Chỉ định vị trí checkpoint
-  # checkpoint_location_hdfs = "hdfs://namenode:8020/user/root/checkpoints_hdfs"
+  checkpoint_location_hdfs = "hdfs://namenode:8020/user/root/checkpoints_hdfs"
   
   #   # Ghi dữ liệu vào HDFS dưới dạng file parquet
-  # hdfs_query = stock_df.writeStream \
-  #   .outputMode("append") \
-  #   .format("json") \
-  #   .option("path", output_path) \
-  #   .option("checkpointLocation", checkpoint_location_hdfs) \
-  #   .start()
+  hdfs_query = stock_df.writeStream \
+    .outputMode("append") \
+    .format("json") \
+    .option("path", output_path) \
+    .option("checkpointLocation", checkpoint_location_hdfs) \
+    .start()
     
-  # hdfs_query.awaitTermination()
+  hdfs_query.awaitTermination()
+  print('End write to HDFS')
 
 def jobStockRealtimeData(spark):
   json_schema = ArrayType(StructType([
@@ -100,15 +94,6 @@ def jobStockRealtimeData(spark):
   data_df = data_df.select(explode(col("jsonData")).alias("stock_data")).select("stock_data.*")
 
   print("Realtime")
-  # query = data_df.writeStream \
-  #   .outputMode("append") \
-  #   .format("console") \
-  #   .option("truncate", "false") \
-  #   .start()
-  
-    # data_df = data_df.withColumn("jsonData.time", to_timestamp(element_at("jsonData.time", 1), "HH:mm:ss"))  # Điều chỉnh định dạng của chuỗi 'time' tương ứng
-
-    # unique_data_df = data_df.select("jsonData.*").dropDuplicates(['total_minutes'])
   query = data_df.writeStream.outputMode("append").format("console").start()
     
   try:

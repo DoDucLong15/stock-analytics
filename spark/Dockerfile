@@ -4,14 +4,14 @@ LABEL maintainer="Your Name <your.email@example.com>"
 # Create /app directory in the container
 RUN mkdir /app
 # RUN rm /submit.sh
-COPY ./run.sh /
+COPY ./go.sh /
 
 RUN echo "Build number: 1"
 # Copy ./app/template.sh from local to /
 COPY ./template.sh /
 
 # Copy all files from ./app in local to /app in container
-COPY ./spark.py ./requirements.txt /app/
+COPY ./spark.py ./hadoop_to_elastics.py ./requirements.txt /app/
 
 # Set the working directory to /app
 WORKDIR /app

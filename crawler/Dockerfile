@@ -2,15 +2,15 @@
 FROM python:3.10
 
 # Cài đặt các package cần thiết
-RUN pip3 install requests
-RUN pip3 install pandas
-RUN pip3 install plotly==5.3.1
-RUN pip3 install retrying==1.3.3
-RUN pip3 install confluent-kafka
-RUN pip3 install vnstock
-RUN pip3 install beautifulsoup4
-RUN pip3 install packaging
-RUN pip3 install ipython
+RUN pip install requests
+RUN pip install pandas
+RUN pip install plotly==5.3.1
+RUN pip install retrying==1.3.3
+RUN pip install confluent-kafka
+RUN pip install vnstock
+RUN pip install beautifulsoup4
+RUN pip install packaging
+RUN pip install ipython
 
 # Copy file Python của bạn vào container
 COPY ./crawl.py /app/crawler.py
