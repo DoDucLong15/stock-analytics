@@ -38,14 +38,11 @@ def calculate_metrics_per_ticker(dataframe):
 
     aggregated_data = aggregated_data.join(first_open, on=['ticker', 'company_type'], how='inner')
     aggregated_data = aggregated_data.join(end_open, on=['ticker', 'company_type'], how='inner')
-
     aggregated_data = aggregated_data.withColumn(
         "price_range_percent",
         round(((col("max_high") - col("min_low")) / col("first_open_value")) * 100, 2)
     )
-
     aggregated_data = calculate_growth(aggregated_data)
-
     return aggregated_data
 
 
@@ -61,11 +58,23 @@ def save_to_cassandra(dataframe, keyspace, table):
         logging.error(f"Lỗi khi lưu dữ liệu vào Cassandra: {str(e)}")
 
 
+def save_to_elasticsearch(dataframe, es_resource, es_nodes="elasticsearch", es_port="9200"):
+    try:
+        dataframe.write.format("org.elasticsearch.spark.sql") \
+            .option("es.nodes", es_nodes) \
+            .option("es.port", es_port) \
+            .option("es.resource", es_resource) \
+            .option("es.nodes.wan.only", "false") \
+            .mode("overwrite") \
+            .save()
+        logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")
+    except Exception as e:
+        logging.error(f"Lỗi khi gửi dữ liệu lên Elasticsearch: {str(e)}")
+
+
 def calculate_metrics_and_save(dataframe):
     metrics = calculate_metrics_per_ticker(dataframe)
-
     metrics.show(35, truncate=False)
-
     es_ready_data = metrics.withColumnRenamed("company_type", "companyType")
     save_to_elasticsearch(es_ready_data, "vn_30")
 
@@ -80,12 +89,8 @@ if __name__ == "__main__":
         .getOrCreate()
 
     spark.sparkContext.setLogLevel("ERROR")
-
     input_path = "hdfs://namenode:8020/user/root/kafka_data"
     hadoop_data = spark.read.json(input_path)
-
     hadoop_data = hadoop_data.withColumnRenamed("companyType", "company_type")
-
     calculate_metrics_and_save(hadoop_data)
-
     spark.stop()
