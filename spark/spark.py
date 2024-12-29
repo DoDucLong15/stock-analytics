@@ -38,12 +38,13 @@ def jobVN30Data(spark):
   # Hiển thị schema của DataFrame kết quả
   stock_df.printSchema()
 
-  query = stock_df.writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .option("truncate", "false") \
-    .start()
-  query.awaitTermination()
+  # query = stock_df.writeStream \
+  #   .outputMode("append") \
+  #   .format("console") \
+  #   .option("truncate", "false") \
+  #   .start()
+  # query.awaitTermination()
+  print('Start write to HDFS')
     # Định nghĩa đường dẫn xuất HDFS
   output_path = "hdfs://namenode:8020/user/root/kafka_data"
 
@@ -59,6 +60,7 @@ def jobVN30Data(spark):
     .start()
     
   hdfs_query.awaitTermination()
+  print('End write to HDFS')
 
 def jobStockRealtimeData(spark):
   json_schema = ArrayType(StructType([
