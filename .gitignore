@@ -1,3 +1,4 @@
 data/datanode
 data/namenode
+data/cassandra
 example/SparkWriteApplication.jar

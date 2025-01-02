@@ -149,6 +149,17 @@ services:
       - NAMENODE_HOST=namenode
     networks:
       - vnstock-net
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    env_file:
+      - .cassandra/cassandra.env
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+    networks:
+      - vnstock-net
 volumes:
   kafka-volume:
   zookeeper-volume:
