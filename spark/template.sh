@@ -1,1 +1,1 @@
-sh /go.sh
+sh /goo.sh

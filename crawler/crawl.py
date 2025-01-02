@@ -93,7 +93,7 @@ def jobCrawlStockDataRealtime(symbol, kafka_topic, bootstrap_servers):
     time.sleep(30)
 
 if __name__ == "__main__":
-  bootstrap_servers = 'kafka:9092'  # Thay thế bằng địa chỉ Kafka broker của bạn
+  bootstrap_servers = 'kafka1:9092,kafka2:9094,kafka3:9096'  # Thay thế bằng địa chỉ Kafka broker của bạn
   kafka_topic_vn30 = 'vn30'  # Thay thế bằng tên Kafka topic của bạn
   kafka_topic_realtime = 'stock_realtime4'
 

@@ -19,7 +19,7 @@ def jobVN30Data(spark):
 
     # Đọc dữ liệu từ Kafka
   kafka_df = spark.readStream.format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("kafka.bootstrap.servers", "kafka1:9092,kafka2:9094,kafka3:9096") \
     .option("subscribe", "vn30") \
     .option("startingOffsets", "latest") \
     .option("failOnDataLoss", "false") \
@@ -77,7 +77,7 @@ def jobStockRealtimeData(spark):
 
     # Định nghĩa tham số Kafka
   kafka_params = {
-    "kafka.bootstrap.servers": "kafka:9092",
+    "kafka.bootstrap.servers": "kafka1:9092,kafka2:9094,kafka3:9096",
     "subscribe": "stock_realtime4",
     "startingOffsets": "latest"
   }

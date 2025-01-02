@@ -1,3 +1,4 @@
-data/datanode
+data/datanode1
+data/datanode2
 data/namenode
 example/SparkWriteApplication.jar
