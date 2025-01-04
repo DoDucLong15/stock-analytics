@@ -61,20 +61,6 @@ def save_to_cassandra(dataframe, keyspace, table):
         logging.error(f"Lỗi khi lưu dữ liệu vào Cassandra: {str(e)}")
 
 
-def save_to_elasticsearch(dataframe, es_resource, es_nodes="elasticsearch", es_port="9200"):
-    try:
-        dataframe.write.format("org.elasticsearch.spark.sql") \
-            .option("es.nodes", es_nodes) \
-            .option("es.port", es_port) \
-            .option("es.resource", es_resource) \
-            .option("es.nodes.wan.only", "false") \
-            .mode("overwrite") \
-            .save()
-        logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")
-    except Exception as e:
-        logging.error(f"Lỗi khi gửi dữ liệu lên Elasticsearch: {str(e)}")
-
-
 def calculate_metrics_and_save(dataframe):
     metrics = calculate_metrics_per_ticker(dataframe)
 
