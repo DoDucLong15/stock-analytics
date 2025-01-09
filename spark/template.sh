@@ -1,1 +1,0 @@
-sh /goo.sh

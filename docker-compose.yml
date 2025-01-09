@@ -1,5 +1,35 @@
-version: "3"
 services:
+  cassandra1:
+    image: cassandra:4.0
+    container_name: cassandra1
+    ports:
+      - "9042:9042"
+    networks:
+      - vnstock-net
+    environment:
+      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra1
+
+#  cassandra2:
+#    image: cassandra:4.0
+#    container_name: cassandra2
+#    networks:
+#      - vnstock-net
+#    environment:
+#      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
+#      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+#      - CASSANDRA_SEEDS=cassandra1
+#
+#  cassandra3:
+#    image: cassandra:4.0
+#    container_name: cassandra3
+#    networks:
+#      - vnstock-net
+#    environment:
+#      - CASSANDRA_CLUSTER_NAME=vnstock_cluster
+#      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+#      - CASSANDRA_SEEDS=cassandra1
   spark-submit-app:
     build:
       context: spark
@@ -13,7 +43,6 @@ services:
       - kafka1
       - kafka2
       - kafka3
-      - crawler
       - elasticsearch
     networks:
       - vnstock-net
@@ -121,19 +150,6 @@ services:
       - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka3:9096,EXTERNAL://localhost:9097
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
-      - zookeeper
-    networks:
-      - vnstock-net
-  crawler:
-    build:
-      context: crawler
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
       - zookeeper
     networks:
       - vnstock-net

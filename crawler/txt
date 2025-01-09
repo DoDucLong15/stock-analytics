@@ -1,0 +1,23 @@
+spark-submit --packages org.elasticsearch:elasticsearch-spark-30_2.12:7.15.2,com.datastax.spark:spark-cassandra-connector_2.12:3.3.0 ./hadoop_to_elastics.py
+
+CREATE TABLE stock_analytics.historical_analysis (
+    ticker TEXT,
+    company_type TEXT,
+    total_volume BIGINT,
+    max_high DOUBLE,
+    min_low DOUBLE,
+    first_time TIMESTAMP,
+    first_open_value DOUBLE,
+    end_time TIMESTAMP,
+    end_open_value DOUBLE,
+    price_range_percent DOUBLE,
+    growth DOUBLE,
+    PRIMARY KEY (ticker, company_type)
+);
+
+
+
+CREATE KEYSPACE stock_analytics WITH REPLICATION = {
+    'class': 'SimpleStrategy',
+    'replication_factor': 1
+};
