@@ -65,19 +65,4 @@ if __name__ == "__main__":
     logging.info("Dữ liệu History đã được gửi thành công lên Elasticsearch!")
   except Exception as e:
     logging.error("Đã xảy ra lỗi khi gửi dữ liệu History lên Elasticsearch: %s", str(e))
-
-    # try:
-    #     calulate_metrics.write.format("org.elasticsearch.spark.sql") \
-    #         .option("es.nodes", "https://big-data.es.asia-southeast1.gcp.elastic-cloud.com") \
-    #         .option("es.port", "9243") \
-    #         .option("es.resource", "vn_30") \
-    #         .option("es.net.http.auth.user", "elastic") \
-    #         .option("es.net.http.auth.pass", "Fqlvu8CGw9jIGdxSsSSR4R1z") \
-    #         .option("es.nodes.wan.only", "true") \
-    #         .mode("overwrite") \
-    #         .save()
-    #     logging.info("Dữ liệu đã được gửi thành công lên Elasticsearch!")
-    # except Exception as e:
-    #     logging.error("Đã xảy ra lỗi khi gửi dữ liệu lên Elasticsearch: %s", str(e))
-
-    spark.stop()
+  spark.stop()

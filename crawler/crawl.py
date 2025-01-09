@@ -76,7 +76,11 @@ def jobCrawlVn30Data(kafka_topic, bootstrap_servers):
   # string_array = list(obj)
   # symbol_array = [item for item in string_array if item.isalpha()]
 
-  symbol_array = ["ACB","BCM","BID","BVH","CTG","FPT","GAS","GVR","HDB","HPG","MBB","MSN","MWG","PLX","POW","SAB","SHB","SSB","SSI","STB","TCB","TPB","VCB","VHM","VIB","VIC","VJC","VNM","VPB","VRE"]
+  symbol_array = ["ACB","BCM","BID","BVH","CTG",
+                  "FPT","GAS","GVR","HDB","HPG","MBB","MSN",
+                  "MWG","PLX","POW","SAB","SHB","SSB","SSI",
+                  "STB","TCB","TPB","VCB","VHM","VIB","VIC",
+                  "VJC","VNM","VPB","VRE"]
   while True:
     for symbol in symbol_array:
       json_data = get_stock_data(symbol)
