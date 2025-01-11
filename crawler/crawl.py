@@ -39,7 +39,7 @@ def get_stock_data(symbol):
       type='stock',
       beautify=True
   )
-  df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
+  df['time'] = pd.to_datetime(df['time'])
   df['time'] = df['time'].apply(lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if not pd.isnull(x) else None)
   df = df.assign(companyType=info_df['companyType'].iloc[0])
 
@@ -58,12 +58,13 @@ def get_stock_data_intraday(symbol):
       investor_segment=True
   )
   # Specify the format directly if you know it, for example:
-  df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
+  df['time'] = pd.to_datetime(df['time'])
+  df['time'] = df['time'].apply(lambda x: x.strftime('%Y-%m-%d %H:%M:%S') if not pd.isnull(x) else None)
   # Save to CSV
   # os.makedirs('data', exist_ok=True)
   # csv_filename = f"data/{symbol}_intraday.csv"
   # df.to_csv(csv_filename, index=False)
-  
+
 
   json_data = df.to_json(date_format='iso', orient='records')
   return json_data
@@ -93,10 +94,10 @@ def jobCrawlStockDataRealtime(symbol, kafka_topic, bootstrap_servers):
     stock_data = get_stock_data_intraday(symbol)
     print(stock_data)
     produce_kafka_json(bootstrap_servers, kafka_topic, symbol, stock_data)
-    time.sleep(30)
+    time.sleep(90)
 
 if __name__ == "__main__":
-  bootstrap_servers = 'localhost:9093,localhost:9095,localhost:9097'  # Thay thế bằng địa chỉ Kafka broker của bạn
+  bootstrap_servers = 'localhost:9093,localhost:9095,localhost:9097'
   kafka_topic_vn30 = 'vn30'  # Thay thế bằng tên Kafka topic của bạn
   kafka_topic_realtime = 'stock_realtime4'
 
