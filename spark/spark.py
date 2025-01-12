@@ -19,7 +19,7 @@ def jobVN30Data(spark):
 
     # Đọc dữ liệu từ Kafka
   kafka_df = spark.readStream.format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("kafka.bootstrap.servers", "kafka1:9092,kafka2:9094,kafka3:9096") \
     .option("subscribe", "vn30") \
     .option("startingOffsets", "latest") \
     .option("failOnDataLoss", "false") \
@@ -38,14 +38,7 @@ def jobVN30Data(spark):
   # Hiển thị schema của DataFrame kết quả
   stock_df.printSchema()
 
-  # query = stock_df.writeStream \
-  #   .outputMode("append") \
-  #   .format("console") \
-  #   .option("truncate", "false") \
-  #   .start()
-  # query.awaitTermination()
   print('Start write to HDFS')
-    # Định nghĩa đường dẫn xuất HDFS
   output_path = "hdfs://namenode:8020/user/root/kafka_data"
 
   #   # Chỉ định vị trí checkpoint
@@ -75,20 +68,16 @@ def jobStockRealtimeData(spark):
     # StructField("total_minutes", StringType(), True)
   ]))
 
-    # Định nghĩa tham số Kafka
   kafka_params = {
-    "kafka.bootstrap.servers": "kafka:9092",
+    "kafka.bootstrap.servers": "kafka1:9092,kafka2:9094,kafka3:9096",
     "subscribe": "stock_realtime4",
     "startingOffsets": "latest"
   }
 
-    # Đọc dữ liệu từ Kafka
   kafka_df = spark.readStream.format("kafka").options(**kafka_params).load()
   
-    # Chuyển đổi cột 'value' từ dạng binary sang chuỗi JSON
   kafka_df = kafka_df.selectExpr("CAST(value AS STRING)")
 
-    # Chuyển đổi cột 'value' từ chuỗi JSON sang dữ liệu JSON
   data_df = kafka_df.select(from_json(col("value"), json_schema).alias("jsonData"))
 
   data_df = data_df.select(explode(col("jsonData")).alias("stock_data")).select("stock_data.*")
