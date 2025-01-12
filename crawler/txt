@@ -21,3 +21,24 @@ CREATE KEYSPACE stock_analytics WITH REPLICATION = {
     'class': 'SimpleStrategy',
     'replication_factor': 1
 };
+
+
+CREATE TABLE IF NOT EXISTS historical_analysis (
+    ticker text,
+    company_type text,
+    end_open_value double,
+    end_time timestamp,
+    first_open_value double,
+    first_time timestamp,
+    growth double,
+    max_high double,
+    min_low double,
+    price_range_percent double,
+    total_volume bigint,
+    rsi double,               -- Chỉ số RSI
+    vwap double,              -- Chỉ số VWAP
+    volatility double,        -- Biến động
+    ma_14 double,             -- Moving average 14 ngày
+    ma_30 double,             -- Moving average 30 ngày
+    PRIMARY KEY (ticker, company_type)
+);
